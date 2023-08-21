@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #e5e5e5;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+}
+
+.header {
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+h1, h2 {
+    color: #1d3959;
+}
+
+label {
+    color: #555;
+    display: block;
+    margin-top: 15px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #5e9cde;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.function-section {
+    padding: 20px;
+}
+
+.function-title {
+    background-color: #5e9cde;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.function-content {
+    color: #666;
+}
+
+.sidebar {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    transition: 0.3s;
+}
+
+.sidebar h2 {
+    text-align: center;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #34495e;
+    transition: background-color 0.3s;
+}
+
+.sidebar ul li:hover {
+    background-color: #34495e;
+    cursor: pointer;
+}
+
+.sidebar {
+    background-color: #1c1c1e;
+    color: #c7c7c8;
+    padding: 20px 0;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.sidebar-header {
+    text-align: center;
+    border-bottom: 1px solid #2c2c2e;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 20px;
+    border-bottom: 1px solid #2c2c2e;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar ul li:hover {
+    background-color: #2c2c2e;
+    color: #fff;
+    cursor: pointer;
+}
+
+.function-content p, .function-content pre {
+    max-height: 200px;  /* Maksimum yüksekliği sınırlandır */
+    overflow-y: auto;  /* Fazla içerik için kaydırma çubuğu ekleyin */
+    border: 1px solid #ccc;  /* İçeriği çevreleyen bir sınır ekleyin */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* İçerikleri daha belirgin hale getirmek için hafif bir arkaplan rengi ekleyin */
+.function-content {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+/* Submit butonunu daha belirgin hale getirelim */
+input[type="submit"] {
+    width: 30%;
+    margin: 20px;
+	
+}
+/* Bu bölgelerin diğer içeriklerin üzerinde olmamasını sağlamak için z-index değerini düşürün */
+.function-section {
+    z-index: 1;
+    position: relative;  /* z-index özelliğinin etkili olması için position özelliği tanımlanmalıdır */
+}
+
+/* Genel sayfa içeriğini daha belirgin hale getirin */
+body {
+    position: relative;
+    z-index: 2;
+	}
+.code-output {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    white-space: pre-wrap; /* Bu, metni kutunun genişliğine sığdırmak için satır sonları ekler */
+}	
+</style>
+<body>
+    
+<div class="sidebar">
+    <div class="sidebar-header">
+        Projects
+        <!-- Arama kutusu -->
+        <input type="text" id="projectSearch" onkeyup="searchProjects()" placeholder="Search for projects...">
+    </div>
+    <ul id="projectList">
+        {% for folder in folder %}
+            <li>{{ folder }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Projeler arasında arama yapma işlevini gerçekleştiren JavaScript kodu -->
+<script>
+    function searchProjects() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('projectSearch');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("projectList");
+        li = ul.getElementsByTagName('li');
+
+        for (i = 0; i < li.length; i++) {
+            txtValue = li[i].textContent || li[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
+<div class="container" style="margin-left: 270px;">
+        <div class="header">
+            <h1>View Project</h1>
+        </div>
+ 
+		        <form method="POST" action="/">
+            <div class="function-section">
+                
+                <div class="function-content" style="height: 100px;">
+                    <label for="project_name">Project Name:</label>
+                    <input type="text" id="project_name" name="project_name" required>
+					<textarea id="project_description" style="visibility:hidden;height: 0px;" name="project_description" required></textarea>
+					<input type="text" id="technologies" style="visibility:hidden;height: 0px;" name="technologies" required>
+                </div>
+            </div>
+
+			<input type="submit" value="View Project" name="view_project">
+        </form>
+        
+{% if project_details %}
+    <div class="function-section">
+        <div class="function-content">
+            <pre class="code-output">{{ project_details }}</pre>
+        </div>
+    </div>
+{% endif %}
+
+    </div>
+</body>
+</html>
+<script>
+    // Tüm list item'lerini seç
+    const projectItems = document.querySelectorAll('.sidebar li');
+    
+    // Her bir list item için click event listener ekleyin
+    projectItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Tıklanan list item'inin içeriğini al
+            const projectName = this.textContent || this.innerText;
+            
+            // Bu içeriği "project_name" input alanına ata
+            const projectNameInput = document.querySelector('input[name="project_name"]');
+            if (projectNameInput) {
+                projectNameInput.value = projectName;
+            }
+        });
+    });
+</script>
+<script>
+    // View Project butonunu seç
+    const viewProjectButton = document.querySelector('input[name="view_project"]');
+    
+    // Butona tıklanıldığında zorunluluk özelliklerini kaldır
+    viewProjectButton.addEventListener('click', function() {
+        const projectDescriptionInput = document.querySelector('textarea[name="project_description"]');
+        const technologiesInput = document.querySelector('input[name="technologies"]');
+        
+        if (projectDescriptionInput) {
+            projectDescriptionInput.removeAttribute('required');
+        }
+        if (technologiesInput) {
+            technologiesInput.removeAttribute('required');
+        }
+    });
+</script>
