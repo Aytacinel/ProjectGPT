@@ -11,7 +11,7 @@ import openai
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = "YOUR_API_KEY"
 model="gpt-3.5-turbo-16k"
 
 
